@@ -1,0 +1,53 @@
+﻿body {
+}
+
+#videoWall {
+    overflow: hidden; /* add this to contain floated children */
+}
+
+.videoWallItem {
+    border: 4px solid lightgray;
+    /*height: 120px;*/
+    width: 160px;
+    float: left;
+    background-color: lightgray;
+    margin: 15px 15px 0px 0px;
+    text-align: center;
+}
+
+.videoWallItem img {
+    height: 120px;
+    width: 160px;
+}
+
+#webcam {
+    margin-top: 10px;
+}
+
+.cameraIcon {
+  padding-left:30px;
+  background: transparent url(camera.png) no-repeat scroll left center;
+  overflow: hidden; 
+}
+
+.cameraIconSmall {
+  padding-left:20px;
+  background: transparent url(cameraSmall.png) no-repeat scroll left center;
+  overflow: hidden; 
+}
+
+.facebookIcon {
+    padding-left:20px;
+    background: transparent url(balloon-facebook.png) no-repeat scroll left center;
+    overflow: hidden; 
+}
+
+.twitterIcon {
+    padding-left:20px;
+    background: transparent url(balloon-twitter.png) no-repeat scroll left center;
+    overflow: hidden; 
+}
+
+#takePhoto {
+    height: 28px;
+}
