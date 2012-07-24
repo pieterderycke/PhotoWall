@@ -7,8 +7,10 @@ namespace PhotoWall.Models
 {
     public interface IUserManager
     {
-        string AddUserPhoto(string userName, byte[] imageBytes);
+        string AddUserImage(string userName, byte[] imageBytes);
 
-        IEnumerable<PhotoInformation> GetUserPhotos();
+        IEnumerable<PhotoInformation> GetUserImages();
+
+        byte[] GetUserImageData(string userName);
     }
 }

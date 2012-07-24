@@ -23,7 +23,7 @@ namespace PhotoWall.Hubs
         public void Send(string userName, string data)
         {
             byte[] imageBytes = ExtractImageFromRequest(data);
-            string imageUrl = userManager.AddUserPhoto(userName, imageBytes);
+            string imageUrl = userManager.AddUserImage(userName, imageBytes);
 
             Clients.display(userName, imageUrl);
         }

@@ -26,7 +26,7 @@ namespace PhotoWall.Controllers
         [HttpPost]
         public JsonResult GetPhotos()
         {
-            return Json(userManager.GetUserPhotos());
+            return Json(userManager.GetUserImages());
         }
 
         private byte[] ExtractImageFromRequest()

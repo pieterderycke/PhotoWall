@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -9,29 +12,36 @@ namespace PhotoWall.Models
 {
     public class UserManager : IUserManager
     {
-        private const string SnapshotDirectory = @"C:\Temp\Html5 Video";
+        private const int Width = 320;
+        private const int Height = 240;
 
+        private readonly string snapshotDirectory;
         private readonly Dictionary<string, PhotoInformation> photos;
 
         public UserManager()
         {
-            photos = new Dictionary<string, PhotoInformation>();
+            this.photos = new Dictionary<string, PhotoInformation>();
+
+            string applicationPath = HttpContext.Current.Request.PhysicalApplicationPath;
+            this.snapshotDirectory = Path.Combine(applicationPath, "Snapshots");
+
+            if (!Directory.Exists(this.snapshotDirectory))
+                Directory.CreateDirectory(snapshotDirectory);
         }
 
-        public string AddUserPhoto(string userName, byte[] imageBytes)
+        public string AddUserImage(string userName, byte[] imageBytes)
         {
             if(string.IsNullOrEmpty(userName))
                 throw new ArgumentNullException("userName");
 
-            string imageUrl = SavePhoto(userName, imageBytes);
-            //photos.Add(userName, new PhotoInformation() { UserName = userName, PhotoUrl = imageUrl });
+            string imageUrl = SaveImage(userName, imageBytes);
 
             return imageUrl;
         }
 
-        public IEnumerable<PhotoInformation> GetUserPhotos()
+        public IEnumerable<PhotoInformation> GetUserImages()
         {
-            IEnumerable<string> snapshots = Directory.EnumerateFiles(SnapshotDirectory, "snapshot_*.png");
+            IEnumerable<string> snapshots = Directory.EnumerateFiles(snapshotDirectory, "snapshot_*.png");
 
             IList<PhotoInformation> photos = new List<PhotoInformation>();
 
@@ -47,14 +57,39 @@ namespace PhotoWall.Models
             return photos;
         } 
 
-        private string SavePhoto(string userName, byte[] imageBytes)
+        public byte[] GetUserImageData(string userName)
         {
-            int snapshotCount = Directory.GetFiles(SnapshotDirectory).Count() + 1;
+            string path = Path.Combine(snapshotDirectory, string.Format("snapshot_{0}.jpg", userName));
+            return System.IO.File.ReadAllBytes(path);
+        }
 
-            string path = Path.Combine(SnapshotDirectory, string.Format("snapshot_{0}.png", userName));
-            System.IO.File.WriteAllBytes(path, imageBytes);
+        private string SaveImage(string userName, byte[] imageBytes)
+        {
+            Bitmap image = ResizeImage(imageBytes);
+
+            int snapshotCount = Directory.GetFiles(snapshotDirectory).Count() + 1;
+
+            string path = Path.Combine(snapshotDirectory, string.Format("snapshot_{0}.jpg", userName));
+            image.Save(path, ImageFormat.Jpeg);
 
             return "/Image?userName=" + userName;
+        }
+
+        private Bitmap ResizeImage(byte[] imageBytes)
+        {
+            using (MemoryStream stream = new MemoryStream(imageBytes))
+            {
+                Bitmap inputImage = new Bitmap(stream);
+                Bitmap outputImage = new Bitmap(Width, Height);
+
+                using(Graphics graphics = Graphics.FromImage(outputImage))
+                {
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    graphics.DrawImage(inputImage, 0, 0, Width, Height);
+                }
+
+                return outputImage;
+            }
         }
 
         private string GetImageUrl(string userName)

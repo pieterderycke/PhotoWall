@@ -74,10 +74,6 @@ $(function () {
         }
     });
 
-    setInterval(function () {
-        sendSnapshot();
-    }, 60000);
-
     $('#takePhoto').click(function () {
         sendSnapshot();
     });
