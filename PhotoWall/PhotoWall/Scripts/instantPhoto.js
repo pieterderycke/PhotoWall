@@ -96,7 +96,7 @@ $(function () {
         context.drawImage(video, 0, 0);
 
         // Send to the backend
-        videoHub.send(userName, photoCanvas.toDataURL('image/png'));
+        videoHub.send(userName, photoCanvas.toDataURL('image/jpeg'));
     };
 
     // Start the connection

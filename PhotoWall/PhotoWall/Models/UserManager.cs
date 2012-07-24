@@ -41,7 +41,7 @@ namespace PhotoWall.Models
 
         public IEnumerable<PhotoInformation> GetUserImages()
         {
-            IEnumerable<string> snapshots = Directory.EnumerateFiles(snapshotDirectory, "snapshot_*.png");
+            IEnumerable<string> snapshots = Directory.EnumerateFiles(snapshotDirectory, "snapshot_*.jpg");
 
             IList<PhotoInformation> photos = new List<PhotoInformation>();
 
